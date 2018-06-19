@@ -1,0 +1,20 @@
+spring:
+  profiles: default
+  datasource:
+    url: jdbc:mysql://172.28.95.57:3306/luglobal?useUnicode=true&characterEncoding=utf8&autoReconnect=true
+    username: root
+    password: password
+debug: true
+mybatis:
+  type-aliases-package: com.luglobal.contest.model
+  config-location: classpath:mybatis.xml
+---
+spring:
+  profiles: pro
+  datasource:
+    url: jdbc:mysql://172.28.95.57:3306/luglobal?useUnicode=true&characterEncoding=utf8&autoReconnect=true
+    username: qa
+    password: LuGlobalPass4!
+mybatis:
+  type-aliases-package: com.luglobal.contest.model
+  config-location: classpath:mybatis.xml
