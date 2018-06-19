@@ -13,7 +13,13 @@ public class QualityTerminal{
         this.deflection_h = "0";
         this.deflection_v = "0";
     }
-
+    public QualityTerminal(String flag){
+        this.brightness = "0";
+        this.blur_motion = "0";
+        this.blur_gaussian = "0";
+        this.deflection_h = "0";
+        this.deflection_v = "0";
+    }
     public String getBrightness() {
         return brightness;
     }

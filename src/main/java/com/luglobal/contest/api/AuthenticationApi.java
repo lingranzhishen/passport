@@ -14,6 +14,7 @@ import com.luglobal.contest.service.AuthenticationService;
 import com.luglobal.contest.service.FaceCompareService;
 import com.luglobal.contest.service.UserService;
 import com.luglobal.contest.utils.Tuple;
+import com.pingan.pama.protocol.encrypt.AESUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -94,9 +95,13 @@ public class AuthenticationApi {
                 FaceCompareReq faceCompareReq = new FaceCompareReq();
                 faceCompareReq.setMediaId(String.valueOf(req.getImgId()));
                 faceCompareReq.setType(CompareType.LOGON.getCode());
+                faceCompareReq.setUsername(req.getUsername());
                 Tuple.Tuple2<ResultCode, Object> compareResult = faceCompareService.hModelFaceCompare(faceCompareReq, servletRequest);
                 if (!ResultCode.OK.equals(compareResult.getA())) {
                     jsonObject.put("error", "人脸识别不通过！");
+                    IntlResultGson resultGson = new IntlResultGson();
+                    resultGson.setData(jsonObject);
+                    return resultGson;
                 }
             //TODO 图片识别
             String token = authenticationService.getToken(userInDataBase);
@@ -108,4 +113,9 @@ public class AuthenticationApi {
         resultGson.setData(jsonObject);
         return resultGson;
     }
+
+//    public static void main(String []args) throws Exception {
+//        String resString = AESUtils.decrypt("KK4bQpbjUPucKp2ltZQBe91JY4drZGcQ2hVYX6uSuAISMuagRwmekmynNI5I08O/ceJH8Ymxb4aAzsqNHWrjCf8yqqXt0YydbvOE8CHo5F+1CyLnj3QoR2Jo/MnpL/k/nNaAFpj3QN0o5zsZXtnyF+Co7gRfWeob5hL21/lRvL2xyXC8bHweG08rnOn8cwplGjllLGZTbXs3iWlgefVjitZD1ENMfTVEg6Wrk0Fcyp0YeVxQ+uFngQ7CpineNbgvm92819f+7pIIe7DbdK2MW+jexxW5N9uhqwZM4Chzo9SDHKWpHomK99AxsZKcBkjhiYIG73jLe+7Hj9To360hug==", "wJpSgmjYvIysTHxlxVT9eQ==");
+//        System.out.print(resString);
+//    }
 }

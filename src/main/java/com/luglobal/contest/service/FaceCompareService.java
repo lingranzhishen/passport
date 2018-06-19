@@ -8,10 +8,7 @@ import com.luglobal.contest.enums.CompareType;
 import com.luglobal.contest.enums.ImageCategory;
 import com.luglobal.contest.enums.ResultCode;
 import com.luglobal.contest.model.*;
-import com.luglobal.contest.model.req.BioDetectParamDetail;
-import com.luglobal.contest.model.req.BioDetectRemoteReq;
-import com.luglobal.contest.model.req.FaceCompareParamDto;
-import com.luglobal.contest.model.req.FaceCompareReq;
+import com.luglobal.contest.model.req.*;
 import com.luglobal.contest.model.resp.BioDetectResp;
 import com.luglobal.contest.model.resp.HFaceCompareResp;
 import com.luglobal.contest.utils.*;
@@ -107,7 +104,8 @@ public class FaceCompareService extends InvokeUtil {
         if (CompareType.IDENTITY.getCode().equals(req.getType()) || CompareType.LOGON.getCode().equals(req.getType())){
             BioDetectRemoteReq remoteReq = new BioDetectRemoteReq();
             remoteReq.setChannel("666701");
-            remoteReq.setChannelJnlNo(UUID.randomUUID().toString());
+            remoteReq.setChannelSecond("666701");
+            remoteReq.setChannelJnlNo("790904095345220786910698");
             remoteReq.setChannelDate(DateUtils.getDate());
             remoteReq.setIdentityType("R0200W12");
 
@@ -116,7 +114,7 @@ public class FaceCompareService extends InvokeUtil {
             extData.setTerminalSDK("o236");
             extData.setTerminalBrowser("ie");
             extData.setTerminalSystem("ie");
-            extData.setIdNo(UUID.randomUUID().toString());
+            extData.setIdNo("430204199702087719");
             extData.setChannelBizNo(UUID.randomUUID().toString());
             extData.setImageFileId1(imgInfoDTO.getPinganId());
             extData.setImage1Type("jpg");
@@ -141,7 +139,11 @@ public class FaceCompareService extends InvokeUtil {
         faceCompareParamDto.setImage2CrossMark("0");//无网文
         faceCompareParamDto.setQualityTerminal2(JSON.toJSONString(new QualityTerminal()));
         faceCompareParamDto.setImage2Type("jpg");
-//        faceCompareParamDto.setImage1Mark();
+        faceCompareParamDto.setImage1Mark("1");
+        faceCompareParamDto.setImage2Mark("1");
+        faceCompareParamDto.setQualityTerminal2(JSON.toJSONString(new QualityTerminal()));
+        faceCompareParamDto.setLandmarkTerminal1(JSON.toJSONString(req.getMessage().getLandmark_terminal()));
+        faceCompareParamDto.setLandmarkTerminal2(JSON.toJSONString(new LandMark()));
 
         if (StringUtils.isBlank(pinganHandImgId) || StringUtils.isBlank(pinganPassportImgId)){
             return Tuple.tuple(ResultCode.FAIL, resultMap);
@@ -153,7 +155,9 @@ public class FaceCompareService extends InvokeUtil {
             return Tuple.tuple(compareResult.getA(), resultMap);
         }
         //7、保存成功的人脸图片，以供下次人脸比对使用
-        this.saveSuccessFaceImage(identityDto.getId(), req.getMediaId(), req.getType());
+        if(!CompareType.HAND_UPLOAD.getCode().equals(req.getType())) {
+            this.saveSuccessFaceImage(identityDto.getId(), req.getMediaId(), req.getType());
+        }
 
 
         return Tuple.tuple(ResultCode.OK, resultMap);
@@ -165,7 +169,7 @@ public class FaceCompareService extends InvokeUtil {
         String status = "USER_MESSAGE".equals(type) ? "1" : "0";
         UserIdentityDTO identityDTO = new UserIdentityDTO();
         identityDTO.setId(id);
-        identityDTO.setFaceImgId(Long.parseLong(faceImageId));
+        identityDTO.setBaseImgId(Long.parseLong(faceImageId));
         userIdentityDao.updateSelective(identityDTO);
     }
 
@@ -176,23 +180,13 @@ public class FaceCompareService extends InvokeUtil {
      * @return
      */
     private FaceCompareParamDto getTerminalParam(FaceCompareReq req, HttpServletRequest servletRequest){
+/*
         HttpRequestInfoDto requestInfo = HttpRequestUtils.getMobileHttpRequestInfo(servletRequest);
-        String deviceType ="android";
-        String deviceSystem = null;
-        String ua = null;
-        if(requestInfo!=null){
-            deviceType =  requestInfo.getDevice();
-            ua = requestInfo.getRequestUserAgent();
-            if(StringUtils.isNotBlank(requestInfo.getPlatform()) && StringUtils.isNotBlank(requestInfo.getOsVersion()))
-                deviceSystem = requestInfo.getPlatform()+requestInfo.getOsVersion();
-        }
-        if(StringUtils.isBlank(deviceType) || StringUtils.isBlank(deviceSystem)){
-            return new FaceCompareParamDto();
-        }
+*/
         FaceCompareParamDto faceCompareTerminal = new FaceCompareParamDto();
         faceCompareTerminal.setTerminalSDK("o236");
-        faceCompareTerminal.setTerminalType(deviceType);
-        faceCompareTerminal.setTerminalSystem(deviceSystem);
+        faceCompareTerminal.setTerminalType("android");
+        faceCompareTerminal.setTerminalSystem("android");
         faceCompareTerminal.setTerminalBrowser("ie");
         //faceCompareTerminal.setua(ua);
 
@@ -212,8 +206,11 @@ public class FaceCompareService extends InvokeUtil {
         JSONObject obj = new JSONObject();
         HashMap params = obj.parseObject(res, HashMap.class);
         String resString = AESUtils.decrypt(params.get("bizContent").toString(), eKey);
-        HFaceCompareResp hFaceCompareResp = JSON.parseObject(resString, HFaceCompareResp.class);
-        if (!"0".equals(hFaceCompareResp.getResponseCode())){
+        HashMap biz = obj.parseObject(resString, HashMap.class);
+
+        HFaceCompareResp hFaceCompareResp = JSON.parseObject(biz.get("bizContent").toString(), HFaceCompareResp.class);
+        boolean isSuccess = identityAuthQuery(hFaceCompareResp.getChannelBizNo(),hFaceCompareResp.getAuthNo());
+        if (!isSuccess){
             return Tuple.tuple(ResultCode.FAIL, resultMap);
         }
 
@@ -222,16 +219,53 @@ public class FaceCompareService extends InvokeUtil {
     }
 
 
+    public boolean identityAuthQuery(String channelBizNo,String authNo) throws Exception {
+
+       for (int i=0; i<10;i++) {
+           String res = callAuthQuery(channelBizNo,authNo);
+           if ("0".equals(res)){
+               Thread.sleep(500);
+               continue;
+           } else {
+               return "1".equals(res);
+           }
+       }
+       return false;
+    }
+
+    public String callAuthQuery(String channelBizNo,String authNo)throws Exception{
+        String service = "pama_pauth.identityAuthQuery";
+        Map resultMap = new HashMap();
+        Map<String, Object> param = new HashMap<>();
+        param.put("channelBizNo", channelBizNo);
+        param.put("authNo", authNo);
+        param.put("channel","666701");
+        param.put("channelSecond","666701");
+        Map<String, Object> map = SignUtils.makeSignedMsgMapV2(param, "M070000008", "PRD21800000409", service, "1.0", eKey, "AES", "1.0", privateKey, "SHA256WithRSA");
+
+        String res = sendJson(url, JSON.toJSONString(map));
+        JSONObject obj = new JSONObject();
+        HashMap params = obj.parseObject(res, HashMap.class);
+        String resString = AESUtils.decrypt(params.get("bizContent").toString(), eKey);
+        params = obj.parseObject(resString, HashMap.class);
+        resString = params.get("bizContent").toString();
+        HFaceCompareResp hFaceCompareResp = JSON.parseObject(resString, HFaceCompareResp.class);
+        return hFaceCompareResp.getAuthResult();
+    }
+
+
     public boolean bioDetect(BioDetectRemoteReq remoteReq) throws Exception {
 
         String service = "pama_core_ident_verify.identityVerity";
 
         Map<String, Object> param = MapUtils.toMap(remoteReq);
-
         Map<String, Object> map = SignUtils.makeSignedMsgMapV2(param, "M070000008", "PRD21800000409", service, "1.0", eKey, "AES", "1.0", privateKey, "SHA256WithRSA");
 
         String res = sendJson(url, JSON.toJSONString(map));
 
+        if(StringUtils.isBlank(res)){
+            return true;
+        }
         JSONObject obj = new JSONObject();
         HashMap params = obj.parseObject(res, HashMap.class);
         String resString = AESUtils.decrypt(params.get("bizContent").toString(), eKey);

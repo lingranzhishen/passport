@@ -12,6 +12,7 @@ public class FaceCompareReq{
     private String mediaId;
     private String username;
 
+    private ImageExtInfo message;
 
     public String getType() {
         return type;
@@ -38,4 +39,11 @@ public class FaceCompareReq{
     }
 
 
+    public ImageExtInfo getMessage() {
+        return message;
+    }
+
+    public void setMessage(ImageExtInfo message) {
+        this.message = message;
+    }
 }
