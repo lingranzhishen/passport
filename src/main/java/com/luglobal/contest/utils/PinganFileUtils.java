@@ -36,9 +36,7 @@ public class PinganFileUtils {
     private static String url = "https://pama-fileservice.pa18.com/file-service-proxy/file";//文件服务地址
 
 
-    public static void main(String[] args) throws Exception {
-//        uploadFile("","");
-    }
+    
 
     public static String uploadFile(byte[] fileContent, String fileName) throws Exception {
         /**
