@@ -67,8 +67,8 @@
                 <tr>
                     <th>用户ID</th>
                     <th>用户名</th>
-                    <th>开户状态</th>
-                    <th>人脸图片</th>
+                    <th>身份认证状态</th>
+                    <th>证件照片</th>
                     <th>详情</th>
                 </tr>
                 </thead>
@@ -77,7 +77,7 @@
                     <td>{{ task.userId }}</td>
                     <td>{{ task.username }}</td>
                     <td>{{ task.status}}</td>
-                    <td><img :src="'/api/img/'+task.faceImgId" class="pic_box" /></td>
+                    <td><img :src="'/api/img/'+task.passportImgId" class="pic_box" /></td>
                     <td> <router-link :to="'/task/detail/' + task.userId">详情</router-link></td>
                 </tr>
                 </tbody>
@@ -97,7 +97,7 @@
         <p class="has-text-left"><strong>人脸照片</strong> •
             <img :src="'/api/img/'+task.faceImgId" />
         </p>
-        <p class="has-text-left"><strong>护照照片</strong> •
+        <p class="has-text-left"><strong>证件照片</strong> •
             <img :src="'/api/img/'+task.passportImgId" />
         </p>
         <p class="has-text-left"><strong>手持证件照片</strong> •
