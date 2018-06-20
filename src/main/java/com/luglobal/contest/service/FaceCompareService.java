@@ -142,7 +142,11 @@ public class FaceCompareService extends InvokeUtil {
         faceCompareParamDto.setImage1Mark("1");
         faceCompareParamDto.setImage2Mark("1");
         faceCompareParamDto.setQualityTerminal2(JSON.toJSONString(new QualityTerminal()));
-        faceCompareParamDto.setLandmarkTerminal1(JSON.toJSONString(req.getMessage().getLandmark_terminal()));
+        if(req.getMessage()!=null) {
+            faceCompareParamDto.setLandmarkTerminal1(JSON.toJSONString(req.getMessage().getLandmark_terminal()));
+        }else{
+            faceCompareParamDto.setLandmarkTerminal1(JSON.toJSONString(new LandMark()));
+        }
         faceCompareParamDto.setLandmarkTerminal2(JSON.toJSONString(new LandMark()));
 
         if (StringUtils.isBlank(pinganHandImgId) || StringUtils.isBlank(pinganPassportImgId)){
