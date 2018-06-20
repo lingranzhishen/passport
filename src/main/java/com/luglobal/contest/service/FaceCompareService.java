@@ -115,7 +115,7 @@ public class FaceCompareService extends InvokeUtil {
 
             BioDetectParamDetail extData = new BioDetectParamDetail();
             extData.setTerminalType("PC");
-            extData.setTerminalSDK("o236");
+            extData.setTerminalSDK("1.0");
             extData.setTerminalBrowser("ie");
             extData.setTerminalSystem("ie");
             extData.setIdNo("430204199702087719");
