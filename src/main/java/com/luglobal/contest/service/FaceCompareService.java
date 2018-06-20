@@ -270,6 +270,7 @@ public class FaceCompareService extends InvokeUtil {
 
         Map<String, Object> param = MapUtils.toMap(remoteReq);
         Map<String, Object> map = SignUtils.makeSignedMsgMapV2(param, "M070000008", "PRD21800000409", service, "1.0", eKey, "AES", "1.0", privateKey, "SHA256WithRSA");
+        logger.info("pama_core_ident_verify.identityVerity_param="+JSON.toJSONString(param));
 
         String res = sendJson(url, JSON.toJSONString(map));
 
