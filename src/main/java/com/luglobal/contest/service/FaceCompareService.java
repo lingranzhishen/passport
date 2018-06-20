@@ -177,6 +177,7 @@ public class FaceCompareService extends InvokeUtil {
         String status = "USER_MESSAGE".equals(type) ? "1" : "0";
         UserIdentityDTO identityDTO = new UserIdentityDTO();
         identityDTO.setId(id);
+        identityDTO.setFaceImgId(Long.parseLong(faceImageId));
         identityDTO.setBaseImgId(Long.parseLong(faceImageId));
         userIdentityDao.updateSelective(identityDTO);
     }
