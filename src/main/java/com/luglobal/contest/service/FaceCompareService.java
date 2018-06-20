@@ -286,6 +286,6 @@ public class FaceCompareService extends InvokeUtil {
         if (bioDetectResp != null && "0".equals(bioDetectResp.getResponseCode()) && bioDetectResp.getResultData() != null && "Y".equals(bioDetectResp.getResultData().getIsAlive())){
             return true;
         }
-        return true;
+        return false;
     }
 }
