@@ -123,7 +123,7 @@ public class FaceCompareService extends InvokeUtil {
             extData.setImageFileId1(imgInfoDTO.getPinganId());
             extData.setImage1Type("jpg");
             extData.setImage1Category(ImageCategory.PHONE_IMG.getCode());
-            remoteReq.setExtData(extData);
+            remoteReq.setExtData(JSON.toJSONString(extData));
             if(!bioDetect(remoteReq)){
                 return Tuple.tuple(ResultCode.USER_FACE_COMPARE_NOT_ALIVE, resultMap);
             }
@@ -160,6 +160,7 @@ public class FaceCompareService extends InvokeUtil {
         //6、调用科技H模型人脸比对接口
         Tuple.Tuple2<ResultCode, Object> compareResult = this.invoikefaceCompareApi(faceCompareParamDto);
         if (!ResultCode.OK.equals(compareResult.getA())){
+            logger.info("比对失败"+JSON.toJSONString(compareResult.getA()));
             return Tuple.tuple(compareResult.getA(), resultMap);
         }
         //7、保存成功的人脸图片，以供下次人脸比对使用
