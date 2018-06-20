@@ -281,9 +281,9 @@ public class FaceCompareService extends InvokeUtil {
         JSONObject obj = new JSONObject();
         HashMap params = obj.parseObject(res, HashMap.class);
         String resString = AESUtils.decrypt(params.get("bizContent").toString(), eKey);
-        logger.info("pama_core_ident_verify.identityVerity"+resString);
         params = obj.parseObject(resString, HashMap.class);
         resString = params.get("bizContent").toString();
+        logger.info("pama_core_ident_verify.identityVerity"+resString);
         BioDetectResp bioDetectResp = JSON.parseObject(resString, BioDetectResp.class);
         if (bioDetectResp != null && "0".equals(bioDetectResp.getResponseCode()) && bioDetectResp.getResultData() != null && "Y".equals(bioDetectResp.getResultData().getIsAlive())){
             return true;
