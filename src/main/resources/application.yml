@@ -12,7 +12,7 @@ mybatis:
 spring:
   profiles: pro
   datasource:
-    url: jdbc:mysql://172.28.95.57:3306/luglobal?useUnicode=true&characterEncoding=utf8&autoReconnect=true
+    url: jdbc:mysql://localhost:3306/luglobal?useUnicode=true&characterEncoding=utf8&autoReconnect=true
     username: qa
     password: LuGlobalPass4!
 mybatis:
