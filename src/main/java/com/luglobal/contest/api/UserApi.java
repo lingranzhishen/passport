@@ -19,7 +19,7 @@ public class UserApi {
     }
 
     @PostMapping("")
-    public Object add(@RequestParam("param")String param) {
+    public Object add(@ReequstBody("param")String param) {
         UserDTO user= JSON.parseObject(param,UserDTO.class);
         if (userService.findByName(user.getUsername()) != null) {
             JSONObject jsonObject = new JSONObject();
