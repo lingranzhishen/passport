@@ -123,7 +123,7 @@ public class FaceCompareService extends InvokeUtil {
             extData.setImageFileId1(imgInfoDTO.getPinganId());
             extData.setImage1Type("jpg");
             extData.setImage1Category(ImageCategory.PHONE_IMG.getCode());
-            remoteReq.setExtData(JSON.toJSONString(extData));
+            remoteReq.setExtDataStr(JSON.toJSONString(extData));
             if(!bioDetect(remoteReq)){
                 return Tuple.tuple(ResultCode.USER_FACE_COMPARE_NOT_ALIVE, resultMap);
             }

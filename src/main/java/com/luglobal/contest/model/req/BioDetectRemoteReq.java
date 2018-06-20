@@ -6,7 +6,7 @@ public class BioDetectRemoteReq {
     private String channelDate;// String 是 8 请求日期 yyyyMMDD 请求发起时系统日期
     private String channelJnlNo;// String 是 64 业务流水号，调用所需附带的唯一流水号，可以与鉴权流水号一致
     private String identityType;// String 是 8 身份认证服务类型，本识 别 服 务 为R0200W12 R0200W12
-    private String extData;
+    private String extDataStr;
 //    private BioDetectParamDetail extData;// Object 是 Object 额外参数
     private String channelSecond;
 
@@ -27,13 +27,6 @@ public class BioDetectRemoteReq {
         this.identityType = identityType;
     }
 
-    public String getExtData() {
-        return extData;
-    }
-
-    public void setExtData(String extData) {
-        this.extData = extData;
-    }
 
     public String getChannelDate() {
         return channelDate;
@@ -57,5 +50,13 @@ public class BioDetectRemoteReq {
 
     public void setChannelSecond(String channelSecond) {
         this.channelSecond = channelSecond;
+    }
+
+    public String getExtDataStr() {
+        return extDataStr;
+    }
+
+    public void setExtDataStr(String extDataStr) {
+        this.extDataStr = extDataStr;
     }
 }
