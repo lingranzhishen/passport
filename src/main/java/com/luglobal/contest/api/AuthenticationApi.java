@@ -89,8 +89,12 @@ public class AuthenticationApi {
         FaceLoginReqGson req = JSON.parseObject(param, FaceLoginReqGson.class);
         UserDTO userInDataBase = userService.findByName(req.getUsername());
         JSONObject jsonObject = new JSONObject();
+        IntlResultGson resultGson = new IntlResultGson();
+
         if (userInDataBase == null) {
-            jsonObject.put("error", "用户不存在");
+            resultGson.setRes_code(ResultCode.BAD_DATA.getCode());
+            resultGson.setRes_msg("用户不存在");
+            return resultGson;
         } else {
                 FaceCompareReq faceCompareReq = new FaceCompareReq();
                 faceCompareReq.setMediaId(String.valueOf(req.getImgId()));
@@ -98,9 +102,9 @@ public class AuthenticationApi {
                 faceCompareReq.setUsername(req.getUsername());
                 Tuple.Tuple2<ResultCode, Object> compareResult = faceCompareService.hModelFaceCompare(faceCompareReq, servletRequest);
                 if (!ResultCode.OK.equals(compareResult.getA())) {
-                    jsonObject.put("error", "人脸识别不通过！");
-                    IntlResultGson resultGson = new IntlResultGson();
-                    resultGson.setData(jsonObject);
+                     resultGson = new IntlResultGson();
+                    resultGson.setRes_code(compareResult.getA().getCode());
+                    resultGson.setRes_msg("人脸识别不通过");
                     return resultGson;
                 }
             //TODO 图片识别
@@ -109,7 +113,6 @@ public class AuthenticationApi {
             userInDataBase.setPassword(null);
             jsonObject.put("user", userInDataBase);
         }
-        IntlResultGson resultGson = new IntlResultGson();
         resultGson.setData(jsonObject);
         return resultGson;
     }
