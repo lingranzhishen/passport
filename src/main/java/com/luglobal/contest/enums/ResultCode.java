@@ -18,6 +18,10 @@ public enum ResultCode {
     INVALID_INPUT("9905", "输入过长"),
     INVALID_PARAMETER("9908","参数错误"),
     BAD_DATA("9909","脏数据"),
+    PASS_ERROR("9909","密码有误"),
+
+    USER_NOT_FOUND("9909","用户不存在"),
+
     ENCRY_KEY_ERROR("9910","密钥错误"),
     UNKNOWN_ERROR("9911","未知错误"),
 

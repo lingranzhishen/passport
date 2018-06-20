@@ -6,6 +6,7 @@ import com.luglobal.contest.annotation.LoginRequired;
 import com.luglobal.contest.enums.CompareType;
 import com.luglobal.contest.enums.ImgTypeEnums;
 import com.luglobal.contest.enums.ResultCode;
+import com.luglobal.contest.exception.CommonException;
 import com.luglobal.contest.gson.FaceLoginReqGson;
 import com.luglobal.contest.gson.IntlResultGson;
 import com.luglobal.contest.model.UserDTO;
@@ -70,10 +71,10 @@ public class AuthenticationApi {
         UserDTO userInDataBase = userService.findByName(user.getUsername());
         JSONObject jsonObject = new JSONObject();
         if (userInDataBase == null) {
-            jsonObject.put("error", "用户不存在");
+            throw new CommonException(ResultCode.USER_NOT_FOUND);
         } else if (!userService.comparePassword(user, userInDataBase)) {
-            jsonObject.put("error", "密码不正确");
-        } else {
+            throw new CommonException(ResultCode.PASS_ERROR);
+        }  else {
             String token = authenticationService.getToken(userInDataBase);
             jsonObject.put("token", token);
             userInDataBase.setPassword(null);
