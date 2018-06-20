@@ -230,7 +230,7 @@ public class FaceCompareService extends InvokeUtil {
 
     public boolean identityAuthQuery(String channelBizNo,String authNo) throws Exception {
 
-       for (int i=0; i<10;i++) {
+       for (int i=0; i<20;i++) {
            String res = callAuthQuery(channelBizNo,authNo);
            if ("0".equals(res)){
                Thread.sleep(500);
