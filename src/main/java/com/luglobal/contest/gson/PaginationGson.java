@@ -79,6 +79,6 @@ public class PaginationGson<T> {
     }
 
     public long getLimit(){
-        return (currentPage-1)*pageSize+1;
+        return (currentPage)*pageSize+1;
     }
 }
