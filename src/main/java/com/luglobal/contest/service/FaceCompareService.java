@@ -108,7 +108,7 @@ public class FaceCompareService extends InvokeUtil {
         if (CompareType.IDENTITY.getCode().equals(req.getType()) || CompareType.LOGON.getCode().equals(req.getType())){
             BioDetectRemoteReq remoteReq = new BioDetectRemoteReq();
             remoteReq.setChannel("666701");
-            remoteReq.setChannelSecond("666701");
+            remoteReq.setChannelSecond("8889");
             remoteReq.setChannelJnlNo("790904095345220786910698");
             remoteReq.setChannelDate(DateUtils.getDate());
             remoteReq.setIdentityType("R0200W12");
