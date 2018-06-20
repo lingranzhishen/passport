@@ -15,6 +15,8 @@ import com.luglobal.contest.utils.*;
 import com.pingan.pama.protocol.SignUtils;
 import com.pingan.pama.protocol.encrypt.AESUtils;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +31,8 @@ import java.util.UUID;
  */
 @Service
 public class FaceCompareService extends InvokeUtil {
+
+    private Logger logger = LoggerFactory.getLogger(FaceCompareService.class);
     @Autowired
     private UserService userService;
 
@@ -211,7 +215,7 @@ public class FaceCompareService extends InvokeUtil {
         HashMap params = obj.parseObject(res, HashMap.class);
         String resString = AESUtils.decrypt(params.get("bizContent").toString(), eKey);
         HashMap biz = obj.parseObject(resString, HashMap.class);
-
+        logger.info(biz.get("bizContent").toString());
         HFaceCompareResp hFaceCompareResp = JSON.parseObject(biz.get("bizContent").toString(), HFaceCompareResp.class);
         boolean isSuccess = identityAuthQuery(hFaceCompareResp.getChannelBizNo(),hFaceCompareResp.getAuthNo());
         if (!isSuccess){
@@ -253,6 +257,7 @@ public class FaceCompareService extends InvokeUtil {
         String resString = AESUtils.decrypt(params.get("bizContent").toString(), eKey);
         params = obj.parseObject(resString, HashMap.class);
         resString = params.get("bizContent").toString();
+        logger.info(resString);
         HFaceCompareResp hFaceCompareResp = JSON.parseObject(resString, HFaceCompareResp.class);
         return hFaceCompareResp.getAuthResult();
     }
